@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Conta - Painel Tetembwa</title>
+    <style>
+        body { background-color: #0d0d0d; color: #ffffff; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-card { background: #181818; border: 1px solid #2a2a2a; padding: 40px; border-radius: 12px; width: 100%; max-width: 350px; box-shadow: 0 4px 25px rgba(0,0,0,0.7); }
+        h2 { color: #d4af37; text-align: center; margin-top: 0; text-transform: uppercase; letter-spacing: 1px; }
+        input { background: #000; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 6px; width: 100%; margin-bottom: 15px; box-sizing: border-box; }
+        button { background: #d4af37; color: #000; font-weight: bold; padding: 12px; border-radius: 6px; width: 100%; border: none; cursor: pointer; }
+        button:hover { background: #b8962d; }
+        p { text-align: center; font-size: 14px; color: #888; }
+        a { color: #d4af37; text-decoration: none; }
+        .error { color: #e74c3c; text-align: center; font-size: 14px; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h2>Criar Conta</h2>
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+        <form action="/register" method="POST">
+            <input type="text" name="username" placeholder="Escolha um Utilizador" required>
+            <input type="password" name="password" placeholder="Escolha uma Palavra-passe" required>
+            <button type="submit">Criar Conta</button>
+        </form>
+        <p>Já tem conta? <a href="/login">Entrar</a></p>
+    </div>
+</body>
+</html>
