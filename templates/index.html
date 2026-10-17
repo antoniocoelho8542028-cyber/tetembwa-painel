@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Financeiro Tetembwa</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background-color: #0d0d0d; color: #ffffff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #222; padding-bottom: 15px; margin-bottom: 25px; }
+        .header h1 { color: #d4af37; margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-logout { background-color: #222; color: #aaa; text-decoration: none; padding: 8px 15px; border-radius: 5px; font-size: 14px; border: 1px solid #333; }
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .card { background: #181818; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .card h3 { margin: 0 0 10px 0; color: #888; font-size: 14px; text-transform: uppercase; }
+        .card .amount { font-size: 26px; font-weight: bold; }
+        .balance { color: #d4af37; }
+        .income { color: #2ecc71; }
+        .expense { color: #e74c3c; }
+        .form-section, .list-section { background: #141414; border: 1px solid #222; border-radius: 12px; padding: 20px; margin-bottom: 30px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+        input, select, button { background: #000000; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 6px; width: 100%; box-sizing: border-box; }
+        button { background: #d4af37; color: #000; font-weight: bold; cursor: pointer; border: none; }
+        button:hover { background: #b8962d; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #222; }
+        th { color: #888; font-size: 12px; text-transform: uppercase; }
+        .action-link { color: #e74c3c; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Painel Tetembwa</h1>
+            <div>
+                <span>Olá, <strong>{{ username }}</strong></span> | 
+                <a href="/logout" class="btn-logout">Sair</a>
+            </div>
+        </div>
+
+        <div class="cards">
+            <div class="card">
+                <h3>Saldo Atual</h3>
+                <div class="amount balance">{{ "%.2f"|format(balance) }} Kz</div>
+            </div>
+            <div class="card">
+                <h3>Receitas</h3>
+                <div class="amount income">+{{ "%.2f"|format(income) }} Kz</div>
+            </div>
+            <div class="card">
+                <h3>Despesas</h3>
+                <div class="amount expense">-{{ "%.2f"|format(expense) }} Kz</div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 style="color: #d4af37; margin-top:0;">Nova Transação</h3>
+            <form action="/add" method="POST" class="form-grid">
+                <input type="text" name="title" placeholder="Descrição" required>
+                <input type="number" step="0.01" name="amount" placeholder="Valor (Kz)" required>
+                <select name="type">
+                    <option value="income">Receita (+)</option>
+                    <option value="expense">Despesa (-)</option>
+                </select>
+                <input type="text" name="category" placeholder="Categoria" required>
+                <input type="date" name="date" required>
+                <button type="submit">Adicionar</button>
+            </form>
+        </div>
+
+        <div class="list-section">
+            <h3 style="color: #d4af37; margin-top:0;">Histórico</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Descrição</th>
+                        <th>Categoria</th>
+                        <th>Valor</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for t in transactions %}
+                    <tr>
+                        <td>{{ t.date }}</td>
+                        <td>{{ t.title }}</td>
+                        <td>{{ t.category }}</td>
+                        <td class="{{ t.type }}">{{ "%.2f"|format(t.amount) }} Kz</td>
+                        <td><a href="/delete/{{ t.id }}" class="action-link">Apagar</a></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: #666;">Nenhuma transação registada.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
